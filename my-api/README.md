@@ -1,3 +1,0 @@
-# Cunino Store
-
-Cowapps-cunino
