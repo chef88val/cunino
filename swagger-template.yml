@@ -1,0 +1,259 @@
+  /family:
+    post:
+      tags:
+        - "family"
+      summary: "Add a new family to the store"
+      description: ""
+      operationId: "addFamily"
+      consumes:
+        - "application/json"
+        - "application/xml"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Family object that needs to be added to the store"
+          required: true
+          schema:
+            $ref: "#/definitions/Family"
+      responses:
+        405:
+          description: "Invalid input"
+        200:
+          description: "Family created"
+      security:
+      - familystore_auth:
+        - "write:familys"
+        - "read:familys"
+    put:
+      tags:
+      - "family"
+      summary: "Update an existing family"
+      description: ""
+      operationId: "updateFamily"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Family object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Family"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Family not found"
+        405:
+          description: "Validation exception"
+      security:
+      - familystore_auth:
+        - "write:familys"
+        - "read:familys"
+    delete:
+      tags:
+       - 'family'
+      summary: 'Delete family'
+      description: ''
+      operationId: 'deleteFamily'
+      consumes:
+        - "application/json"
+        - "application/xml"
+      produces:
+        - "application/json"
+        - "application/xml"
+      parameters:
+        - in: 'body'
+          name: 'body'
+          description: ''
+          required: false
+          schema:
+            $ref: "#/definitions/Family"
+      responses:
+        400:
+          description: 'Method not allowed'
+        402:
+          description: 'Value not right'
+        405:
+          description: 'Not found'
+        200:
+          description: 'Remove it'
+      security:
+        - familystore_auth:
+          - "write:familys"
+          - "read:familys"
+  /family/findByStatus:
+    get:
+      tags:
+      - "family"
+      summary: "Finds Familys by status"
+      description: "Multiple status values can be provided with comma separated strings"
+      operationId: "findFamilysByStatus"
+      consumes:
+        - "application/json"
+        - "application/xml"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+      - name: "status"
+        in: "body"
+        description: "Status values that need to be considered for filter"
+        required: true
+        type: "object"
+        familys:
+          type: "string"
+          enum:
+          - "available"
+          - "pending"
+          - "sold"
+          default: "available"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            familys:
+              $ref: "#/definitions/Family"
+        400:
+          description: "Invalid status value"
+        405: 
+          description: 
+      security:
+      - familystore_auth:
+        - "write:familys"
+        - "read:familys"
+  /family/findByTags:
+    get:
+      tags:
+      - "family"
+      summary: "Finds Familys by tags"
+      description: "Muliple tags can be provided with comma separated strings. Use         tag1, tag2, tag3 for testing."
+      operationId: "findFamilysByTags"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "tags"
+        in: "body"
+        description: "Tags to filter by"
+        required: true
+        type: "object"
+        familys:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            familys:
+              $ref: "#/definitions/Family"
+        400:
+          description: "Invalid tag value"
+      security:
+      - familystore_auth:
+        - "write:familys"
+        - "read:familys"
+      deprecated: true
+  /family/{familyId}:
+    get:
+      tags:
+      - "family"
+      summary: "Find family by ID"
+      description: "Returns a single family"
+      operationId: "getFamilyById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "familyId"
+        in: "path"
+        description: "ID of family to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Family"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Family not found"
+      security:
+      - api_key: []
+    post:
+      tags:
+      - "family"
+      summary: "Updates a family in the store with form data"
+      description: ""
+      operationId: "updateFamilyWithForm"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "familyId"
+        in: "path"
+        description: "ID of family that needs to be updated"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "name"
+        in: "formData"
+        description: "Updated name of the family"
+        required: false
+        type: "string"
+      - name: "status"
+        in: "formData"
+        description: "Updated status of the family"
+        required: false
+        type: "string"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+      - familystore_auth:
+        - "write:familys"
+        - "read:familys"
+    delete:
+      tags:
+      - "family"
+      summary: "Deletes a family"
+      description: ""
+      operationId: "deleteFamily"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "familyId"
+        in: "path"
+        description: "Family id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Family not found"
+      security:
+      - familystore_auth:
+        - "write:familys"
+        - "read:familys"
+  /family/{familyId}/uploadImage:

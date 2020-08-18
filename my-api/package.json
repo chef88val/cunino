@@ -1,0 +1,17 @@
+{
+  "name": "cunino-store",
+  "description": "Cowapps-cunino",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node src/bin/www",
+    "dev": "node src/bin/www | bunyan"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "bunyan": "1.5.1",
+    "cookie-parser": "1.3.5",
+    "dtrace-provider": "^0.8.8",
+    "express": "^4.17.1",
+    "node-yaml-config": "0.0.5"
+  }
+}
